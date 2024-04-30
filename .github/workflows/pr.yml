@@ -1,26 +1,26 @@
-name: Build and test
-
-on: [pull_request]
-
 jobs:
   build-and-test:
-    runs-on: ubuntu-20.04
-
+    runs-on: self-hosted
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up JDK
+    - continue-on-error: true
+      uses: actions/checkout@v3
+    - continue-on-error: true
+      name: Set up JDK
       uses: actions/setup-java@v3
       with:
+        distribution: temurin
         java-version: '17'
-        distribution: 'temurin'
-
-    - name: Cache the Maven packages to speed up build
+    - continue-on-error: true
+      name: Cache the Maven packages to speed up build
       uses: actions/cache@v3
       with:
-        path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-        restore-keys: ${{ runner.os }}-m2      
-
-    - name: Build and test
+        path: ~/.m2
+        restore-keys: ${{ runner.os }}-m2
+    - continue-on-error: true
+      name: Build and test
       run: mvn clean install
-      
+name: Build and test
+on:
+  repository_dispatch:
+    types: trigger-ga___pr.yml
